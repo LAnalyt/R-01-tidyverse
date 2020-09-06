@@ -4,12 +4,12 @@
 
 # The LEGO Datasets ####
 
-# The LEGO dataset is about the contrucstion toys known as LEGOs, which contains information about the sets, parts, themes, and colors that make up LEGO history. The dataset is spread across many tables.
+# The LEGO dataset is about the contrucstion toys known as LEGOs, which contains information about the sets, parts, themes, and colors that make up LEGO history. The dataset is spreaded across many tables.
 # Import the "parts" table in form of .rds file in 0_data
 sets <- readRDS("sets.rds") # contains one row for each of the 4977 LEGO sets.
 # Examine the table
 head(sets) # theme_id is not useful on its own.
-# The useful information for "theme_id" is in another table called "themes". Import and examine this table:
+# The useful information for "theme_id" is in another table called "themes". Import and examine this table
 themes <- readRDS("themes.rds")
 head(themes) 
 # The theme_id variable in sets table links to the id variable in the themes table. For any individual set, we could find a theme that matches it.
