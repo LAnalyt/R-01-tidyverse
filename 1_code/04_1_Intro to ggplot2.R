@@ -6,7 +6,7 @@
 
 # Load gpplot2 in Tidyverse package
 library(ggplot2)
-# Load a built-in dataset "mtcars" in ggplot2, which contains information on 32 cars from 1973 issue of Motor Trend
+# Load a built-in dataset "mtcars" in R, which contains information on 32 cars from 1973 issue of Motor Trend
 data("mtcars")
 # Explore the structure of the dataset
 str(mtcars)
