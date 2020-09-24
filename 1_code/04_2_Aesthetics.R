@@ -66,3 +66,31 @@ ggplot(mtcars, aes(wt, mpg, fill = fcyl, color = fam)) +
   geom_point(shape = 21, size = 4, alpha = 0.6)
 # Any time you use a solid color, make sure to use alpha blending to account for over plotting.
              
+# Attributes ####
+
+# One of the most confusing parts of ggplot2 is that all the visible aesthetics also exist as attributes
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point(color = "red")
+# Attributes are always called in the geom layer, like color, size and shape
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point(color = "red", size = 4, shape = 4)
+# The distinction between aesthetics and attributes is subtle but important.
+
+# Colors in R can be specified by using hex codes 
+my_blue <- "#4ABEFF"
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point(color = my_blue, alpha = 0.6)
+# Change the color both in aesthetics mapping and attributes
+ggplot(mtcars, aes(wt, mpg, fill = fcyl)) +
+  geom_point(color = my_blue, size = 10, shape = 1) # the fill mapping overrides the color attribute i geom_point().
+# Add a text layer with label setting as the row names from the dataset
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_text(label = rownames(mtcars), color = "red")
+
+# Modifying aesthetics ####
+
+# Adding more aesthetic layers to the plot will increase the complexity and decrease the readability
+ggplot(mtcars, aes(mpg, qsec, color = fcyl, 
+                   shape = fam, 
+                   size = hp/wt)) +
+  geom_point()
