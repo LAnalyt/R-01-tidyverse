@@ -94,3 +94,86 @@ ggplot(mtcars, aes(mpg, qsec, color = fcyl,
                    shape = fam, 
                    size = hp/wt)) +
   geom_point()
+# Position specifies how ggplot will adjust for overlapping bars or points on a single layer. The most straightforward position is "identity" which is a default position for a scatter plot.
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point() # "Identity" means the value in the data frame is exactly where the value is positioned in the plot. 
+# There is an issue with the precision of this data set. The sepals were measured to the nearest milimeter. Although there're only 150 points, it'll be too much overplotting to distinguish them. Add some random noise on both x and y axes to see regions of high density - "jittering"
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter")
+# Each position can be accessed as a function
+posn_j <- position_jitter(0.1)
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = posn_j)
+# This has advantages, as we can set the  specific arguments for the position and the position function allows to use the parameter throughout the plotting, which maintains the consistency across plots and layers.
+posn_j <- position_jitter(0.2, seed = 136) # "seed" defines how much random noise should be added.
+# Run the plot again.
+
+# Each of the aesthetics is a scale which is mapped onto the data. Scale functions has the syntax scale_*_*, with the 2nd part defines which scale we want to modify, and the 3rd matches type of data.
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length") + # dependent on data type
+  scale_color_discrete("Species") # "discrete": categorical data.
+# There are many arguments for the scale functions.Limits argument describes the scale's range 
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length", 
+                     limits = c(2, 8)) + 
+  scale_color_discrete("Species") 
+# break argument controls the tick mark positions
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length", limits = c(2, 8), 
+                     breaks = seq(2, 8, 3)) + 
+  scale_color_discrete("Species") 
+# expand argument is a numeric vector of length 2, giving a multitative and additive constant used to expand the scales so that there is a small gap between the data and the axes.
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length", limits = c(2, 8), 
+                     breaks = seq(2, 8, 3),
+                     expand = c(0, 0)) + 
+  scale_color_discrete("Species")
+# labels argument adjust the category names
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length", limits = c(2, 8), 
+                     breaks = seq(2, 8, 3),
+                     expand = c(0, 0)) + 
+  scale_color_discrete("Species",
+                       labels = c("Setosa", "Versicolor", "Virginica"))
+# labs() change the label of the axes quickly
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width,
+                 color = Species)) +
+  geom_point(position = "jitter") +
+  labs(x = "Sepal length", y = "Sepal width")
+
+# Modify some aesthetics to make a bar plot of the number of cyclinders for cars with different types of transmission in the mtcars data set
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar()
+# Set the axis labels
+mtcars_gg <- ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  labs(x = "Number of Cyclinders", y = "Count")
+# Implement a custom fill color scale using scale_fill_manual()
+palette <- c("#377EB8", "#E41A1C")
+mtcars_gg + scale_fill_manual("Transmission", values = palette,
+                              labels = c("automatic", "manual"))
+# Modify the position so that the bars for transmission are displayed side by side
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "dodge") +
+  labs(x = "Number of Cyclinders", y = "Count") +
+  scale_fill_manual("Transmission", values = palette,
+                    labels = c("automatic", "manual"))
+
+# Setting a dummy aesthetics
+mtcars_dummy <- ggplot(mtcars, aes(mpg, 0)) +
+  geom_point(position = "jitter")
+# When using setting y-axis limits, you can specify the limits as separate arguments, ylim(lo, hi) or as a single numeric vector, ylim(c(lo, hi))
+mtcars_dummy + ylim(-2, 2)
