@@ -1,13 +1,13 @@
 # 1 DATA WRANGLING 
 
-# 1.1 Gapminder R ####
+# 1.1 The Gapminder dataset ####
 
 # Loading the gapminder and dplyr packages:
 library(gapminder) # tracks economic and social indicators of countries over time.
 library(dplyr) # provides step-by-step to transform data.
-# If the message shows the pacakage is missing, you need to install them first with install.package(""). 
+# If the message shows the package is missing, you need to install them first with install.package(""). 
 # Have a first look at the dataset gapminder:
-gapminder # 1704 observations (rows), 6 variables (columns)
+gapminder 
 
 # 1.2 Filter ####
 
@@ -18,7 +18,7 @@ gapminder %>%
   filter(year == 1957) # "==": logical equal
 # Or, filter for the result of a single country:
 gapminder %>%
-  filter(country == "United States") # characters must be in "..." format
+  filter(country == "United States") # characters must be in quotes.
 # You can also filter with more conditions, separate by ",".
 gapminder %>%
   filter(year == 2002, country == "China") 
@@ -28,17 +28,17 @@ gapminder %>%
 # The arrange verb sorts the observations in the dataset in the ascending or descending order. This is useful, e.g when you want to know the most extreme value in your dataset.
 # E.g, sort in the ascending order of GDP per capital 
 gapminder %>%
-  arrange(gdpPercap) # Congo has the least GDP per capital
-# By default 'arrange' sorts in ascending order.
+  arrange(gdpPercap)
+# By default "arrange" sorts in ascending order.
 # Sort in descending order of GDP per capital: 
 gapminder %>%
-  arrange(desc(gdpPercap)) # Kuwait hast the most 
+  arrange(desc(gdpPercap))  
 # Sort in the ascending order of life expectancy (lifeExp):
 gapminder %>%
-  arrange(lifeExp) # Rwanda 
+  arrange(lifeExp)  
 # Sort in descending order:
 gapminder %>%
-  arrange(desc(lifeExp)) #Japan
+  arrange(desc(lifeExp)) 
 # Just like "filter", the gapminder object itself doesn't change, "arrange" just gives a new sorted dataset.
 # Combine filter() with arrange() to find the highest population countries in a particular year.
 gapminder %>% 
