@@ -60,10 +60,10 @@ gapminder %>%
   filter(year == 2007,  gdp > 5000000000) %>%
   arrange(desc(pop))
 
-# summarize() for aggregating many observations into a summary
+# summarize() for aggregating many observations into a summary:
 gapminder %>%
   summarize(meanLifeExp = mean(lifeExp)) # average lifeExp
-# Name the new column in the summarized result before "="
+# Name the new column in the summarized result before "=":
 gapminder %>%
   summarize(averageLifeExp = mean(lifeExp))
 # Combine filter() with summarize():
@@ -108,49 +108,42 @@ gapminder %>%
 gapminder_2007 <- gapminder %>%
   filter(year == 2007) 
 
-# There are 3 parts to a ggplot2 graph: data, aesthtics and geometric layer.
-ggplot(gapminder_2007,        # data.
-       aes(x = lifeExp,       # aesthetics.
-           y = gdpPercap)) +
-  geom_point()                # geometric layer.
+# There are 3 parts to a ggplot2 graph: data, aesthetics and geometric layer.
+ggplot(gapminder_2007,             # data.
+       aes(lifeExp, gdpPercap)) +  # aesthetics.
+  geom_point()                     # geometric layer.
 # Switch axes
-ggplot(gapminder_2007,        # data.
-       aes(x = gdpPercap,     # aesthetics.
-           y = lifeExp)) +
-  geom_point()                # geometric layer.
+ggplot(gapminder_2007,        
+       aes(gdpPercap, lifeExp)) +
+  geom_point()                
 
 # With gdpPercap as an axis, it's hard to understand because most points are crammed into a small part of the graph. Variables like gdpPercap are better communicated on a log scale, where each fixed distance represents a multiplication of the value.
 ggplot(gapminder_2007,
-       aes(x = gdpPercap,
-           y = lifeExp)) +
+       aes(gdpPercap, lifeExp)) +
   geom_point() +
   scale_x_log10()
 # Putting population on a log scale spreads the points out more. To put the y-axis on a log scale, use scale_y_log(10):
 ggplot(gapminder_2007,
-       aes(x = lifeExp,
-           y = pop)) +
+       aes(lifeExp, pop)) +
   geom_point() +
   scale_y_log10()
 # In some cases you might want to put both the x- and y-axes on a log scale.
 ggplot(gapminder_2007, 
-       aes(x = pop,
-           y = gdpPercap)) +
+       aes(pop, gdpPercap)) +
   geom_point() +
   scale_x_log10() +
   scale_y_log10()
 
 # Choose a variable to represent with color: 
 ggplot(gapminder_2007,
-       aes(x = gdpPercap,
-           y = lifeExp, 
+       aes(gdpPercap, lifeExp, 
            color = continent)) +
   geom_point() +
   scale_x_log10()     # ggplot2 automatically adds a legend.
 
 # Another aesthetic is size which is great for representing numeric variables:
 ggplot(gapminder_2007,
-       aes(x = gdpPercap,
-           y = lifeExp, 
+       aes(gdpPercap, lifeExp, 
            color = continent,
            size = pop)) + 
   geom_point() +
@@ -158,15 +151,13 @@ ggplot(gapminder_2007,
 
 # ggplot2 supports faceting: dividing the graph into one small sub-graph for each continent.
 ggplot(gapminder_2007,
-       aes(x = gdpPercap,
-           y = lifeExp,
+       aes(gdpPercap, lifeExp,
            size = pop)) +
   geom_point() +
   facet_wrap(~continent)
 # Graph the full gapminder data and facet on year, which lists the graph communicate changes over time:
 ggplot(gapminder,
-       aes(x = gdpPercap,
-           y = lifeExp,
+       aes(gdpPercap, lifeExp,
            color = continent,
            size = pop)) +
   geom_point() +
@@ -182,9 +173,8 @@ by_year <- gapminder %>%
   summarize(totalPop = sum(pop),
             meanLifeExp = mean(lifeExp))
 ggplot(by_year,        
-       aes(x = year,     
-           y = meanLifeExp)) +
-  geom_line() +           # to use lines for graph
+       aes(year, meanLifeExp)) +
+  geom_line() +            # to use lines for graph
   expand_limits(y = 0)
 # Summarize by two variables:
 year_continent <- gapminder %>%
@@ -192,8 +182,7 @@ year_continent <- gapminder %>%
   summarize(totalPop = sum(pop),
             medianLifeExp = median(lifeExp))
 ggplot(year_continent,
-       aes(x = year,
-           y = totalPop,
+       aes(year, totalPop,
            color = continent)) +
   geom_line() +
   expand_limits(y = 0)
@@ -206,8 +195,7 @@ by_continent <- gapminder %>%
   summarize(totalPop = sum(pop),
             meanLifeExp = mean(lifeExp))
 ggplot(by_continent,
-       aes(x = continent,
-           y = meanLifeExp)) +
+       aes(continent, meanLifeExp)) +
   geom_col()
 
 ## Histograms ####
@@ -216,23 +204,21 @@ ggplot(by_continent,
 gapminder_2007 <- gapminder %>%
   filter(year == 2007)
 ggplot(gapminder_2007,
-       aes(x = lifeExp)) +  # histograms have only one aesthetic.
+       aes(lifeExp)) +  # histograms have only one aesthetic.
   geom_histogram()
 # For population, e.g, you need to put x-axis on a log scale.
 ggplot(gapminder_2007,
-       aes(x = pop)) +
+       aes(pop)) +
   geom_histogram() +
   scale_x_log10()
 
 ## Boxplots ####
 # Create a boxplot with geom_boxplot():
 ggplot(gapminder_2007,
-       aes(x = continent,
-           y = lifeExp)) +
+       aes(continent, lifeExp)) +
   geom_boxplot()
 # Faceting the graph to look at the distribution by both continent and year:
 ggplot(gapminder,
-       aes(x = continent,
-           y = lifeExp)) +
+       aes(continent, lifeExp)) +
   geom_boxplot() +
   facet_wrap(~ year)
