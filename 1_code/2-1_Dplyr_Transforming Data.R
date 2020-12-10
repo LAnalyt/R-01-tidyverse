@@ -16,23 +16,22 @@ counties %>%
 # Create a new table for the selection:
 counties_selected <- counties %>%
   select(state, county, population, unemployment)
-
 # The observations are now in alphabetical order by state and county. We might be interested in the counties that have the highest population.
 
 # 1.3 arrange() ####
 # Sort the data based on one or more variables:
 counties_selected %>%
   arrange(population)
-# add desc() to sort the counties with the highest population first
+# Add desc() to sort the counties with the highest population first:
 counties_selected %>%
   arrange(desc(population))
 
 # 1.4 filter() #### 
-# Extract only particular observations from a dataset, based on a condition. E.g, filter only the counties of the state New York
+# Extract only particular observations from a dataset, based on a condition. E.g, filter only the counties of the state New York:
 counties_selected %>%
   arrange(desc(population)) %>%
   filter(state == "New York")
-# filter based on logical operators
+# Filter based on logical operators:
 counties_selected %>%
   arrange(desc(population)) %>%
   filter(unemployment < 6)
@@ -46,16 +45,16 @@ counties_selected <- counties %>%
   select(state, county, population, private_work, public_work, unemployment)
 # Sort the observations of the public_work variable in descending order.
 counties_selected %>% arrange(desc(public_work))
-# Filter for counties in the state of California that have a population above 1000000
+# Filter for counties in the state of California that have a population above 1000000:
 counties_selected %>%
   filter(state == "California", population > 1000000)
-# Filter for Texas and more than 10000 people; sort in descending order of private_work
+# Filter for Texas and more than 10000 people; sort in descending order of private_work:
 counties_selected %>%
   filter(state == "Texas", population > 10000) %>%
   arrange(desc(private_work))
 
 # 1.5 mutate() ####
-# Datasets don't usually have all the variables you need. Mutate() adds new variables or change existing variables
+# Datasets don't usually have all the variables you need. Mutate() adds new variables or change existing variables.
 # The unemployment variable is in percentage form. What if you're interested in the total number of unemployed rather than as a percentage of the population?
 counties_selected %>%
   mutate(unemployed_population = population * unemployment/100)
@@ -63,7 +62,7 @@ counties_selected %>%
 counties_selected %>%
   mutate(unemployed_population = population * unemployment/100) %>%
   arrange(desc(unemployed_population))
-# Calculating the percentage of women in a county
+# Calculating the percentage of women in a county:
 counties %>% 
   select(state, county, population, men, women) %>%
   mutate(proportion_women = women/population * 100)

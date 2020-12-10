@@ -10,16 +10,17 @@ counties <- readRDS("counties.rds") # 2015 US Census.
 # count() finds out the number of observations.
 counties %>%
   count() # the result is one-row table, with one column called n.
-# Count the number of counties in each state:
+# Counting the total data is little useful. The real value of the verb is when you give a specific valuable to count. E.g, count the number of counties in each state:
 counties %>%
-  count(state)
-# Count and sort:
+  count(state) 
+# We've aggregated the total number of observations into manageable number. The n column tells the number of counties in each state.
+# Count and sort: count and sort the most common observations.
 counties %>%
-  count(state, sort = TRUE)
-# When we add up counties, we want to weigh each of them differently, e.g, by population.
+  count(state, sort = TRUE) # Texas has the most counties.
+# When we add up counties, we want to weigh each of them differently, e.g, instead of finding the number of counties in each state, we want to know the total number of people. Use the weight argument for population:
 counties %>% 
   select(state, county, population) %>%
-  count(state, wt = population, sort = TRUE)
+  count(state, wt = population, sort = TRUE) # the n column is weighted by population.
 # Counting by region:
 counties_selected <- counties %>%
   select(region, state, population, citizens, unemployment)
@@ -35,10 +36,10 @@ counties %>%
   select(region, state, population, walk) %>% # walk: % people who walk to work. 
   mutate(population_walk = walk * population/100) %>%
   count(state, wt = population_walk, sort = TRUE)
-
-# count() is a special case of a more general set of verbs: group by and summarize.
+# We can see that while California had the largest total population, but New York state has the largest number of people who walk to work. 
 
 # 2.2 summarize() ####
+# count() is a special case of a more general set of verbs: group by and summarize.
 # summarize() takes many observations and turns them into one observation. E.g, find the population of the US:
 counties %>%
   summarize(total_pop = sum(population))
@@ -53,7 +54,7 @@ counties %>%
 # min(): minimum value
 # max(): maximum value
 # n(): size of the group
-# Combine the summary funtions with summarize():
+# Combine the summary functions with summarize():
 counties %>%
   summarize(min_pop = min(population), max_unemploy = max(unemployment), average_income = mean(income))
 
@@ -64,17 +65,17 @@ counties %>%
   summarize(total_pop = sum(population))
 
 # 2.4 arrange() ####
-# It's useful to add an additional step of an arrange(), so that we can focus on the most notable examples 
+# It's useful to add an additional step of an arrange(), so that we can focus on the most notable examples. 
 counties %>%
   group_by(state) %>%
   summarize(total_pop = sum(population),
             average_unemployment = mean(unemployment)) %>%
   arrange(desc(average_unemployment))
 
-# Group by multiple column at the same time:
+# Group by multiple columns at the same time:
 counties %>%
-  select(state, metro, county, population) %>%
-  group_by(state, metro) %>%
+  select(state, metro, county, population) %>% 
+  group_by(state, metro) %>% # metro: describes whether the county is in a metro (city) area or not.
   summarize(total_pop = sum(population))
 # Finding the density (in people per square meter):
 counties %>%
@@ -92,7 +93,7 @@ counties %>%
             median_pop = median(total_pop))
 
 # 2.5 top_n() ####  
-# What if instead of aggregating each state, you only want to find the largest county in each state? top_n() in Dplyr is very useful for keeping the most extreme observations from each group.
+# What if instead of aggregating each state, you only want to find the largest county in each state? top_n() in dplyr is very useful for keeping the most extreme observations from each group.
 counties_selected %>%
   group_by(state) %>%
   top_n(1, population) # find the county with highest population in each state.
@@ -108,7 +109,7 @@ counties %>%
   top_n(1, average_income)
 
 # 2.6 ungroup() ####
-# ungroup the observations that are grouped by group_by()
+# ungroup the observations that are grouped by group_by().
 # In how many states do more people live in metro areas than non-metro areas?
 counties %>%
   select(state, metro, population) %>%
