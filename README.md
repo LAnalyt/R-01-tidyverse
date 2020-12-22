@@ -29,3 +29,27 @@ Exercises in Tidyverse packages from Datacamp and other courses
 3.3 Full, Semi, and Anti Joins
 
 3.4 Case Study: Joins on Stack Overflow Data
+
+4. DATA VISUALIZATION WITH GGPLOT2
+
+4.1 Introduction to ggplot2
+
+4.2 Aesthetics
+
+4.3 Geometries
+
+4.4 Themes
+
+4.5 Statistics
+
+4.6 Coordinates
+
+4.7 Facets
+
+4.8 Best practice
+
+5. TIDYR
+
+6. STRINGR
+
+7. PURRR
