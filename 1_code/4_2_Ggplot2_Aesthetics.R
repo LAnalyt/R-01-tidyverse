@@ -9,14 +9,13 @@ data("iris")
 ggplot(iris, aes(x = Sepal.Length, 
                  y = Sepal.Width)) + 
   geom_point() # each mapped variable is its own column variable in the dataframe.
+# We do not need to specify x =... and y =..., since the first two arguments inside aes() are by default aesthetic mapping for X and Y axis.
 # Mapping onto color:
-ggplot(iris, aes(x = Sepal.Length, 
-                 y = Sepal.Width, 
+ggplot(iris, aes(Sepal.Length, Sepal.Width, 
                  color = Species)) + 
   geom_point() # Species, a dataframe column, is mapped onto colors, a visible aesthetics.
 # Aesthetics could be called in the geom layer:
-ggplot(iris) + geom_point(aes(x = Sepal.Length, 
-                 y = Sepal.Width, 
+ggplot(iris) + geom_point(aes(Sepal.Length, Sepal.Width, 
                  color = Species)) # shows the same result.
 # However, this is typically only done if we don't want all layers to inherit the same aesthetics or we're mixing different data sources.
 
