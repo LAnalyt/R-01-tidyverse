@@ -100,3 +100,98 @@ ggplot(Vocab, aes(education, vocabulary)) +
 # Replace the point layer with a jitter layer and change the transparency.
 ggplot(Vocab, aes(education, vocabulary)) +
   geom_jitter(alpha = 0.2)
+
+# 3.3 Histograms ####
+# A histogram is a special type of bar plot that shows the binned distribution of a continuous variable.
+ggplot(iris, aes(Sepal.Width)) + # only needs X aesthetic.
+  geom_histogram()
+# The geom_histogram is associated with a specific statistic (stat bin). The bin argument takes the default value of 30. Default bin width can be calculated:
+diff(range(iris$Sepal.Width))/30
+# Changing the binwidth to 0.1 give us more intuitive impression of the data.
+ggplot(iris, aes(Sepal.Width)) + 
+  geom_histogram(binwidth = 0.1) # no space between the bars.
+# Re-position tick marks:
+ggplot(iris, aes(Sepal.Width)) + 
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05)
+# Fill the bars according to each species:
+ggplot(iris, aes(Sepal.Width,
+                 fill = Species)) +
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05)
+# The default position is "stack", which is not clear in this case. Alternate the position to "dodge":
+ggplot(iris, aes(Sepal.Width,
+                 fill = Species)) +
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05,
+                 position = "dodge")
+# The "fill" position normalizes each bin to represent the proportion of all observations in each bin.
+ggplot(iris, aes(Sepal.Width,
+                 fill = Species)) +
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05,
+                 position = "fill")
+# Histograms cut up a continuous variable into discrete bins and, by default, maps the internally calculated count variable onto the y aesthetic. An internal variable "density" can be accessed by using the ".." notation.
+ggplot(mtcars, aes(mpg, ..density..)) +
+  geom_histogram(binwidth = 1, 
+                 fill = "blue") # shows the relative frequency, which is the height times the width of each bin.
+# geom_histogram() is a special case of geom_bar() with a position argument that can take on different values:
+# stack ( default): bars for different groups are stacked on top of each other.
+ggplot(mtcars, aes(mpg,
+                   fill = fam)) +
+  geom_histogram(binwidth = 1)
+# dodge: bars for different groups are placed side by side.
+ggplot(mtcars, aes(mpg,
+                   fill = fam)) +
+  geom_histogram(binwidth = 1,
+                 position = "dodge")
+# fill: bars for different groups are shown as proportions.
+ggplot(mtcars, aes(mpg,
+                   fill = fam)) +
+  geom_histogram(binwidth = 1,
+                 position = "fill")
+# identity: plot the values as they appear in the dataset.
+ggplot(mtcars, aes(mpg,
+                   fill = fam)) +
+  geom_histogram(binwidth = 1,
+                 position = "identity",
+                 alpha = 0.4)
+
+# 3.4 Bar plots ####
+# Histograms are a specialized version of bar plots, where a continuous X-axis is binned. Classic bar plots refer to a categorical X-axis, which uses either geom_bar() or geom_col().
+# geom_bar(): counts the number of cases in each category of the variable mapped to the X-axis.
+# geom_col(): plots the actual values.
+# Load the "msleep" dataset from the ggplot2 package:
+data("msleep") 
+# This is an updated and exapnded version of the mammals sleep dataset, which contains the information on the REM sleep time and eating habits of a variety of mammals.
+str(msleep)
+# Making a bar plot splitting the the dataset according to eating behavior:
+ggplot(msleep, aes(vore)) +
+  geom_bar()
+# Plot distribution instead of absolute counts with descriptive statistics on the fly: 
+iris_summ_long <- iris %>% 
+  select(Species, Sepal.Width) %>%
+  gather(key, value, -Species) %>%
+  group_by(Species) %>%
+  summarise(avg = mean(value),
+            stdev = sd(value))
+# geom_errorbar(): adds error bars
+ggplot(iris_summ_long, aes(Species, avg)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin = avg - stdev,
+                    ymax = avg + stdev),
+                width = 0.1)
+# This is typical plots in scientific publications, which are actually strongly discourages for many reasons.
+# Position in bar and col plots:
+# stack: default
+ggplot(mtcars, aes(fcyl, 
+                   fill = fam)) +
+  geom_bar()
+# dodge: preferred
+ggplot(mtcars, aes(fcyl,
+                   fill = fam)) +
+  geom_bar(position = "dodge")
+# fill: to show proportions
+ggplot(mtcars, aes(fcyl,
+                   fill = fam)) +
+  geom_bar(position = "fill")
