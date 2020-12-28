@@ -195,3 +195,78 @@ ggplot(mtcars, aes(fcyl,
 ggplot(mtcars, aes(fcyl,
                    fill = fam)) +
   geom_bar(position = "fill")
+# Customize bar plots further by adjusting the dodging so that the bars partially overlap each other:
+ggplot(mtcars, aes(fcyl,
+                   fill = fam)) +
+  geom_bar(position = position_dodge(width = 0.2),
+           alpha = 0.6)
+# Fill each segment of the bar plot according to an ordinal variable with a sequential color palette:
+ggplot(Vocab, aes(education,
+                  fill = as.factor(vocabulary))) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer()
+
+# 3.5 Line plots ####
+# Line plots are very common and well-suited in time series. 
+# Load the beavers dataset, which contains body temperature series of 2 beavers.
+data(beavers) # includes 2 datasets of 2 beavers: beaver 1 and 2.
+# Combine into a larger dataset:
+beaver <- rbind(data.frame(beaver1, id = factor("beaver1")),
+                data.frame(beaver2, id = factor("beaver2")))
+str(beaver)
+# Summarize the dataset:
+summary(beaver)
+# Plot the body temperature of the 2 beavers over the time:
+ggplot(beaver, aes(time, temp, 
+                   color = id)) +
+  geom_line()
+
+# Load and examine the economics dataset from ggplot2 package:
+data("economics")
+str(economics) # contains a time series for unemployment and population statistics from the Federal Reserve Bank of St. Louis in the United States. 
+# Plot a line plot to see how the unemployment rate changes over time:
+ggplot(economics, aes(date, unemploy/pop)) +
+         geom_line()
+
+# Load the "fish" dataset which contains "fish.species", "fish.tidy" and "fish.year":
+load("fish.RData")
+# fish.species contains the global capture rates of seven salmon species from 1950–2010. 
+str(fish.species)
+# Plot the Rainbow Salmon time series:
+ggplot(fish.species, aes(Year, Rainbow)) +
+  geom_line()
+# Plot the Pink Salmon time series:
+ggplot(fish.species, aes(Year, Pink)) +
+  geom_line()
+# fish.tidy contains the same data, but in three columns: Species, Year, and Capture:
+str(fish.tidy)
+# When there are multiple lines, we have to consider which aesthetic is more appropriate in allowing us to distinguish individual trends.
+ggplot(fish.tidy, aes(Year, Capture,
+                      linetype = Species)) + 
+  geom_line() # difficult to distinguish.
+# Using size is even worse:
+ggplot(fish.tidy, aes(Year, Capture,
+                      size = Species)) + 
+  geom_line()
+# Using color allows for easily distinguishable groups:
+ggplot(fish.tidy, aes(Year, Capture,
+                      color = Species)) + 
+  geom_line()
+# Use an area fill with geom_area():
+ggplot(fish.tidy, aes(Year, Capture,
+                      fill = Species)) + 
+  geom_area() # default position: stack.
+# With "fill" position:
+ggplot(fish.tidy, aes(Year, Capture,
+                      fill = Species)) + 
+  geom_area(position = "fill") # proportion of the total fish capture.
+# geom_ribbon() for overlapping area plot:
+ggplot(fish.tidy, aes(Year, Capture,
+                      fill = Species)) + 
+  geom_ribbon(aes(ymax = Capture,
+                  ymin = 0),
+              alpha = 0.3)
+# Plot multiple time-series by coloring by species:
+ggplot(fish.tidy, aes(Year, Capture,
+                      color = Species)) +
+  geom_line(aes(group = Species))
