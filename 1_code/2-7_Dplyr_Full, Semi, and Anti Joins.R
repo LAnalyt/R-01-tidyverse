@@ -1,4 +1,4 @@
-# 3. FULL, SEMI AND ANTI JOINS
+# 7. FULL, SEMI AND ANTI JOINS
 
 # Load the tidyverse packages:
 library(tidyverse)
@@ -17,7 +17,7 @@ batwing <- inventory_parts_joined %>%
   filter(set_num == "70916-1") %>%
   select(-set_num)
 
-# 3.1 The full join ####
+# 7.1 The full join ####
 
 # With left join or right join, we can see which pieces were in one but not the other? What if you want to keep all observations in both tables, whether or not they match to each other? 
 batmobile %>%
@@ -29,7 +29,7 @@ batmobile %>%
             suffix = c("_batmobile", "_batwing")) %>%
   replace_na(list(quantity_batmobile = 0, quantity_batwing = 0)) # replace NAs in multiple variables by separating them with commas.
 
-# 3.2 Compare Batman and Star Wars ####
+# 7.2 Compare Batman and Star Wars ####
 
 # Now compare two themes, each is made up of many sets:
 themes <- readRDS("themes.rds")
@@ -66,7 +66,7 @@ parts_joined %>%
   inner_join(colors, by = c("color_id" = "id")) %>%
   inner_join(parts, by = "part_num", suffix = c("_color", "_part"))
 
-# 3.3 Semi and Anti join ####
+# 7.3 Semi and Anti join ####
 
 # All the verbs inner_join, left_join, right_join and full_join belong to the mutating verbs; they combine variables from two tables. Another class of verbs is the filtering joins. A filtering join keeps observations from the first table but doesn't add new variables.
 
@@ -95,7 +95,7 @@ version_1_inventories <- inventories %>%
 sets %>% 
   anti_join(version_1_inventories, by = "set_num")
 
-# 3.4 Visualize set differences ####
+# 7.4 Visualize set differences ####
 
 # Examine and compare colors using in Batmobile and Batwing: first aggregate each set into colors.
 batmobile_colors <- batmobile %>%
@@ -130,7 +130,7 @@ colors_joined %>%
   scale_fill_manual(values = color_palette, guide = FALSE)
 # The color bars on the right have positive differences, meaning they are more common in the Batmobile set. The colors on the left are more common in the Batwing set.
 
-# 3.5 Compare Batman and Star Wars sets ####
+# 7.5 Compare Batman and Star Wars sets ####
 
 # To compare two individual sets, and the kinds of LEGO pieces that comprise them, we'll need to aggregate the data into separate themes.
 inventory_parts_themes <- inventories %>%

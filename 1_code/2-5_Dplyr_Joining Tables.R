@@ -1,8 +1,8 @@
-# 1. JOINING DATA WITH DPLYR
+# 5. JOINING DATA WITH DPLYR
 
 # The information for data analysis is not always confined in a data table. Often you'll need to join multiple tables together, so that they can be analyzed in a combination.
 
-# 1.1 The LEGO datasets ####
+# 5.1 The LEGO datasets ####
 
 # The LEGO dataset is about the construction toys known as LEGOs, which contains information about the sets, parts, themes, and colors that make up LEGO history. The dataset is spread across many tables.
 # Import the "parts" table in form of .rds file in 0_data:
@@ -14,7 +14,7 @@ themes <- readRDS("themes.rds")
 head(themes) 
 # The theme_id variable in sets table links to the id variable in the themes table. For any individual set, we could find a theme that matches it.
 
-# 1.2 Inner-join ####
+# 5.2 Inner-join ####
 
 # To see the theme that each set is associated with, we'll need to join the two tables with the inner_join verb from dplyr package.
 # Load tidyverse including the dplyr package:
@@ -35,7 +35,7 @@ sets %>%
              suffix = c("_set", "_theme")) %>%
   count(name_theme, sort = TRUE)
 
-# 1.3 Joining with a one-to-many relationship ####
+# 5.3 Joining with a one-to-many relationship ####
 
 # Not all the tables have exactly the same observations like sets and themes, or parts and part_categories. Import and examine a new table
 inventories <- readRDS("inventories.rds") # An inventory represents a product that's made up of some combination of parts.
@@ -71,7 +71,7 @@ parts %>%
 inventory_parts %>%
   inner_join(parts, by = "part_num")
 
-# 1.4 Joining three or more tables ####
+# 5.4 Joining three or more tables ####
 
 # Multiple tables could be joined using inner_join and pipe %>%
 sets %>%

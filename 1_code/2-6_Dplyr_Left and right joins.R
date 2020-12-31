@@ -1,4 +1,4 @@
-# 2. LEFT AND RIGHT JOINS
+# 6. LEFT AND RIGHT JOINS
 
 # Load the dplyr package and read tables:
 library(dplyr)
@@ -13,7 +13,7 @@ inventory_parts_joined <- inventory_parts_joined %>%
   arrange(desc(quantity))
 inventory_parts_joined
 
-# 2.1 The left_join verb ####
+# 6.1 The left_join verb ####
 
 # Extract just 2 LEGO sets "Batmobile" and "Batwing" based on their set numbers: 
 batmobile <- inventory_parts_joined %>%
@@ -67,7 +67,7 @@ sets %>% left_join(inventory_version_1, by = "set_num") %>%
   # filter where version is na
   filter(is.na(version)) # It looks like there are cases where a set does not have an original version.
 
-# 2.2 The right_join verb ####
+# 6.2 The right_join verb ####
 
 # The right joins are mirror images of left joins. A right join keeps all the observations in the second (or "right") table, whether or not they appear in the first table.
 batmobile %>%
@@ -87,7 +87,7 @@ sets %>%
   count(theme_id, sort = TRUE) %>%
   right_join(themes, by = c("theme_id" = "id"))
 
-# 2.3 Replace NA ####
+# 6.3 Replace NA ####
 
 # For this data those NAs appeared in count result should really be zeros. Import the tidyr package to use replace_na function:
 library(tidyr)
@@ -112,7 +112,7 @@ parts %>%
   right_join(part_categories, by = c("part_cat_id" = "id")) %>%
   replace_na(list(n = 0))
 
-# 2.4 Joining tables to themselves ####
+# 6.4 Joining tables to themselves ####
 
 # In the themes table, beside theme_id and name, there's also a parent_id column. This indicates a hierarchical table. 
 themes

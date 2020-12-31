@@ -1,6 +1,6 @@
-# 4. CASE STUDY: STACK OVERFLOW QUESTIONS
+# 8. CASE STUDY: STACK OVERFLOW QUESTIONS
 
-# 1. The Stack Overflow tables ####
+# 8.1. The Stack Overflow tables ####
 # Load tidyverse
 library(tidyverse) 
 # Load the and examine the Stack Overflow questions about the programming language R:
@@ -37,7 +37,7 @@ questions_with_tags %>%
 tags %>%
   anti_join(question_tags, by = c("id" = "tag_id"))
 
-# 4.2 Joining questions and answers ####
+# 8.2 Joining questions and answers ####
 # Next load and examine the answer table:
 answers <- readRDS("answers.rds")
 answers # Stack Overflow questions are answered by other users on the site, each could zero or multiple answers, which means "one-to-many" relationship.
@@ -63,7 +63,7 @@ tagged_answers %>% group_by(tag_name) %>%
   summarise(questions = n(), average_answers = mean(n)) %>%
   arrange(desc(questions))
 
-# 4.3 The bind_rows verb ####
+# 8.3 The bind_rows verb ####
 # In some situations, instead of joining one variable next to each other, we may want to stack one on top of the other by binding rows.
 posts <- questions %>%
   bind_rows(answers) # the question_id column of first observations has NA because those are questions originally, and only the answers table has that column.
