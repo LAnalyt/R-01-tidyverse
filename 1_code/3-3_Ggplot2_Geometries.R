@@ -11,20 +11,26 @@ head(iris, 3)
 # Each geom can accept specific aesthetic mappings, e.g. geom_point().
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) + 
   geom_point()
-# In additional to the essential aesthetics, we can also choose optional aesthetics like color, size, alpha, fill, shape or stroke. We can specify both geom-specific data and aesthetics. This allows us to control the information for each layer independently. 
-# E.g, we want to display the summary statistics of the iris dataset on top of the data points.
+# In additional to the essential aesthetics, we can also choose optional aesthetics like color, size, alpha, fill, shape or stroke.
+ggplot(iris, aes(Sepal.Length, Sepal.Width, 
+                 col = Species)) + 
+  geom_point()
+# We can specify both geom-specific data and aesthetics. This allows us to control the information for each layer independently.
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point(aes(col = Species))
+# Display the summary statistics of the iris dataset on top of the data points.
 iris.summary <- iris %>% group_by(Species) %>%
   summarise_all(mean) 
 iris.summary # contains mean measurements for each of 3 species.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) + # inherits both data and aes
+                 col = Species)) + # inherits both data and aes
   geom_point() +
-  geom_point(data = iris.summary, # differen data, but inherits aes.
+  geom_point(data = iris.summary, # different data, but inherits aes
              shape = 15, 
              size = 5)
 # The aesthetics inside the geom_point() can be controlled independently.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) +
+                 col = Species)) +
   geom_point() +
   geom_point(data = iris.summary, 
              shape = 21, 
@@ -34,14 +40,15 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width,
 # geom_jitter() is a shortcut to using position argument to change the position from identity to jitter.
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_jitter() # geom_point() with position sets to jitter.
-# To deal with overplotting of points, we adjust the alpha-blending:
+# To deal with overplotting of points, adjust the alpha-blending:
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) +
-  geom_jitter(alpha = 0.6) # this helps to see the regionsof density.
+                 col = Species)) +
+  geom_jitter(alpha = 0.6) # helps to see regions density.
 # Another way to deal with overplotting is to change the symbol to a hollow circle, which is shape 1.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) +
+                 col = Species)) +
   geom_jitter(shape = 1)
+# It is always recommended to optimize shape, size and alpha blending of points in a scatter plot.
 
 # 3.2 Overplotting ####
 # Load the diamonds dataset from the ggplot2 package:
@@ -53,7 +60,7 @@ ggplot(diamonds, aes(carat, price,
   geom_point()
 # Change the points to tiny points with transparency:
 ggplot(diamonds, aes(carat, price, 
-                     color = clarity)) +
+                     col = clarity)) +
   geom_point(shape = ".",
              alpha = 0.5)
 # Aligned values on a single axis: this occurs when one axis is continuous and the other is categorical, which can be overcome with some form of jittering.
@@ -64,29 +71,29 @@ mtcars <- mtcars %>%
          fam = as.factor(am))
 # Plot with default points:
 ggplot(mtcars, aes(fcyl, mpg, 
-                   color = fam)) +
+                   col = fam)) +
   geom_point()
 # Alter the point positions by jittering:
 ggplot(mtcars, aes(fcyl, mpg, 
-                   color = fam)) +
+                   col = fam)) +
 geom_point(position = position_jitter(width = 0.3))
 # Alternatively jitter and dodge the point positions:
 ggplot(mtcars, aes(fcyl, mpg, 
-                   color = fam)) +
+                   col = fam)) +
   geom_point(position = position_jitterdodge(jitter.width = 0.3,
                                              dodge.width = 0.3))
 # Low-precision data: this results from low-resolution measurements like in the iris dataset, which is measured to 1mm precision. In this case we can jitter on both the x and y axis.
 # jitter can be a geom itself, an argument in geom_point(), or a position function. 
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) + 
+                 col = Species)) + 
   geom_jitter(alpha = 0.5,
               width = 0.1)
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) + 
+                 col = Species)) + 
   geom_point(alpha = 0.5,
               position = "jitter")
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
-                 color = Species)) + 
+                 col = Species)) + 
   geom_point(alpha = 0.5,
              position = position_jitter(width = 0.1))
 # Integer data: this can be type integer or factor variables. You'll typically have a small, defined number of intersections between two variables, which is similar to low precision data.
@@ -136,7 +143,7 @@ ggplot(mtcars, aes(mpg, ..density..)) +
   geom_histogram(binwidth = 1, 
                  fill = "blue") # shows the relative frequency, which is the height times the width of each bin.
 # geom_histogram() is a special case of geom_bar() with a position argument that can take on different values:
-# stack ( default): bars for different groups are stacked on top of each other.
+# stack (default): bars for different groups are stacked on top of each other.
 ggplot(mtcars, aes(mpg,
                    fill = fam)) +
   geom_histogram(binwidth = 1)
@@ -162,13 +169,12 @@ ggplot(mtcars, aes(mpg,
 # geom_bar(): counts the number of cases in each category of the variable mapped to the X-axis.
 # geom_col(): plots the actual values.
 # Load the "msleep" dataset from the ggplot2 package:
-data("msleep") 
-# This is an updated and exapnded version of the mammals sleep dataset, which contains the information on the REM sleep time and eating habits of a variety of mammals.
+data("msleep") # contains the information on the REM sleep time and eating habits of a variety of mammals.
 str(msleep)
-# Making a bar plot splitting the the dataset according to eating behavior:
+# Making a bar plot splitting the dataset according to eating behavior:
 ggplot(msleep, aes(vore)) +
   geom_bar()
-# Plot distribution instead of absolute counts with descriptive statistics on the fly: 
+# Plot the distribution instead of absolute counts with descriptive statistics on the fly: 
 iris_summ_long <- iris %>% 
   select(Species, Sepal.Width) %>%
   gather(key, value, -Species) %>%
@@ -181,7 +187,8 @@ ggplot(iris_summ_long, aes(Species, avg)) +
   geom_errorbar(aes(ymin = avg - stdev,
                     ymax = avg + stdev),
                 width = 0.1)
-# This is typical plots in scientific publications, which are actually strongly discourages for many reasons.
+# This is typical plots in scientific publications, which are actually strongly discouraged for many reasons.
+
 # Position in bar and col plots:
 # stack: default
 ggplot(mtcars, aes(fcyl, 
@@ -214,11 +221,9 @@ data(beavers) # includes 2 datasets of 2 beavers: beaver 1 and 2.
 beaver <- rbind(data.frame(beaver1, id = factor("beaver1")),
                 data.frame(beaver2, id = factor("beaver2")))
 str(beaver)
-# Summarize the dataset:
-summary(beaver)
 # Plot the body temperature of the 2 beavers over the time:
 ggplot(beaver, aes(time, temp, 
-                   color = id)) +
+                   col = id)) +
   geom_line()
 
 # Load and examine the economics dataset from ggplot2 package:
@@ -240,7 +245,7 @@ ggplot(fish.species, aes(Year, Pink)) +
   geom_line()
 # fish.tidy contains the same data, but in three columns: Species, Year, and Capture:
 str(fish.tidy)
-# When there are multiple lines, we have to consider which aesthetic is more appropriate in allowing us to distinguish individual trends.
+# When there are multiple lines, we have to consider which aesthetics is more appropriate in allowing us to distinguish individual trends.
 ggplot(fish.tidy, aes(Year, Capture,
                       linetype = Species)) + 
   geom_line() # difficult to distinguish.
@@ -250,7 +255,7 @@ ggplot(fish.tidy, aes(Year, Capture,
   geom_line()
 # Using color allows for easily distinguishable groups:
 ggplot(fish.tidy, aes(Year, Capture,
-                      color = Species)) + 
+                      col = Species)) + 
   geom_line()
 # Use an area fill with geom_area():
 ggplot(fish.tidy, aes(Year, Capture,
