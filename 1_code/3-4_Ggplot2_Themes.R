@@ -49,11 +49,15 @@ head(economics)
 # Make a line plot to see how unemployment rate changes over time:
 ggplot(economics, aes(date, unemploy/pop)) +
   geom_line() 
-# Add recession to the time series:
-recess = read.csv("recession.csv", header = FALSE)
-names(recess) <- c("begin","end")
-recess$begin <- as.Date(recess$begin, format = c("%Y-%m-%d"))
-recess$end <- as.Date(recess$end, format = c("%Y-%m-%d"))
+# Add recession to the time series with the lubridate package:
+library(lubridate)
+recess <- data.frame(
+  begin = c("1969-12-01","1973-11-01","1980-01-01","1981-07-01","1990-07-01","2001-03-01", "2007-12-01"), 
+  end = c("1970-11-01","1975-03-01","1980-07-01","1982-11-01","1991-03-01","2001-11-01", "2009-06-01"),
+  stringsAsFactors = F
+)
+recess$begin <- ymd (recess$begin)
+recess$end <- ymd (recess$end)
 # Plot the bars representing the recession time on the current plot:
 plt_prop_unemployed_over_time <- 
   ggplot(economics, aes(date, unemploy/pop)) + 
@@ -63,5 +67,139 @@ plt_prop_unemployed_over_time <-
           inherit.aes = FALSE, 
           fill = "red", 
           alpha = 0.2) +
-  geom_line()
+  geom_line() +
+  labs(title = "The percentage of unemployed Americans increases sharply during recession")
+plt_prop_unemployed_over_time
+# Many plot elements have multiple properties that can be set.
+plt_prop_unemployed_over_time + 
+  theme(axis.line = element_line(color = "red", 
+                                 linetype = "dashed"),
+        rect = element_rect(fill = "grey92")) # very pale gray
+# Remove the axis ticks and the panel gridlines by making them a blank element:
+plt_prop_unemployed_over_time +
+  theme(axis.ticks = element_blank(), 
+        panel.grid = element_blank())
+# Add the major horizontal grid lines back to the plot:
+plt_prop_unemployed_over_time +
+  theme(panel.grid.major.y = element_line(color = "white",
+                                          size = 0.5,
+                                          linetype = "dotted"))
+# Adjust the axis tick labels' text and title:
+plt_prop_unemployed_over_time +
+  theme(axis.text = element_text(color = "grey25"),
+        plot.title = element_text(size = 16, 
+                                  face = "italic"))
+
+# Load and plot a scatter plot of the mtcars dataset:
+data("mtcars")
+plt_mpg_vs_wt_by_cyl <-
+  ggplot(mtcars, aes(wt, mpg,
+                     col = factor(cyl))) +
+  geom_point()
+plt_mpg_vs_wt_by_cyl
+# Whitespace means all the non-visible margins and spacing in the plot. To set a single whitespace value, use unit(x, unit), where x is the amount and unit is the unit of measure. 
+plt_mpg_vs_wt_by_cyl +
+  theme(axis.ticks.length = unit(2, "lines"),
+        legend.key.size = unit(3, "cm")) 
+# The default unit is "pt" (points), which scales well with text. Other options include "cm", "in" (inches) and "lines" (of text).
+# Borders require you to set 4 positions with margin(top, right, bottom, left, unit).
+plt_mpg_vs_wt_by_cyl +
+  theme(legend.margin = margin(20, 30, 40, 50, "pt"),
+        plot.margin = margin(10, 30, 50, 70, "mm"))
+
+# 4.2 Theme flexibility ####
+# If there are too many plots within a presentation, we'll want to have a consistency in the style. Once you settle with a specific theme, we can apply it to all plots of the same type. Creating a theme from scratch is a detailed process, we don't want to repeat it for every plot we make. 
+# Defining theme objects:
+z <- ggplot(iris, aes(Sepal.Length, Sepal.Width,
+                      col = Species)) +
+  geom_jitter(alpha = 0.6) +
+  scale_x_continuous("Sepal Length (cm)",
+                     limits = c(4, 8),
+                     expand = c(0, 0)) +
+  scale_y_continuous("Sepal Width (cm)", 
+                     limits = c(1.5, 5), 
+                     expand = c(0, 0)) +
+  scale_color_brewer("Species", 
+                     palette = "Dark2",
+                     labels = c("Setosa", "Versicolor", "Virginica"))
+z
+# Adjust specific theme arguments to get the desired plot style:
+z + theme(text = element_text(family = "serif",
+                              size = 14),
+          rect = element_blank(),
+          panel.grid = element_blank(),
+          title = element_text(color = "#8b0000"),
+          axis.line = element_line(color = "black"))
+# Save this layer as a theme object to reuse it later:
+theme_iris <- theme(text = element_text(family = "serif",
+                                        size = 14),
+                    rect = element_blank(),
+                    panel.grid = element_blank(),
+                    title = element_text(color = "#8b0000"),
+                    axis.line = element_line(color = "black"))
+z + theme_iris
+# Reuse the theme with a histogram:
+ggplot(iris, aes(Sepal.Width)) +
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05) +
+  theme_iris
+# The histogram now has the same style as the scatter plot, without having to type the whole theme layer.
+# Add another theme layer which will override the previous setting:
+ggplot(iris, aes(Sepal.Width)) +
+  geom_histogram(binwidth = 0.1,
+                 center = 0.05) +
+  theme_iris +
+  theme(axis.line.x = element_blank()) # remove the x axis.
+
+# 4.3 Built-in themes ####
+# built-in theme functions start with theme_*, e.g, theme_gray() is the default theme.
+# Access theme_classic() template, which is great for publication-quality:
+z + theme_classic()
+# theme_bw() is useful with transparency.
+plt_prop_unemployed_over_time + theme_bw()
+# theme_void() removes everything but the data.
+plt_prop_unemployed_over_time + theme_void()
+
+# Outside of ggplot2, another source of built-in themes is the ggthemes package.
+install.packages("ggthemes")
+library(ggthemes)
+# The tufte theme mimics Tufte's classic style, which removes all non-data ink and sets the font to a serif typeface.
+z + theme_tufte()
+# Add the fivethirtyeight.com theme to the plot:
+plt_prop_unemployed_over_time + theme_fivethirtyeight()
+# Use the Wall Street Journal theme:
+plt_prop_unemployed_over_time + theme_wsj()
+
+# 4.4 Updating themes ####
+# Reusing a theme across many plots helps to provide a consistent style. There are several options for this.
+# Assign the theme to a variable, and add it to each plot. theme_update() commands updates the default theme and saves the current default. 
+original <- theme_update(text = element_text(family = "serif",
+                                             size = 14),
+                         rect = element_blank(),
+                         panel.grid = element_blank(),
+                         title = element_text(color = "#8b0000"),
+                         axis.line = element_line(color = "black"))
+# Now all plots have the same theme.
+z
+# Save the theme for the economics dataset as theme_recession:
+theme_recession <- theme(
+  rect = element_rect(fill = "grey92"),
+  legend.key = element_rect(color = NA),
+  axis.ticks = element_blank(),
+  panel.grid = element_blank(),
+  panel.grid.major.y = element_line(color = "white", 
+                                    size = 0.5, 
+                                    linetype = "dotted"),
+  axis.text = element_text(color = "grey25"),
+  plot.title = element_text(face = "italic", size = 16),
+  legend.position = c(0.6, 0.1)
+)
+# Add the Tufte theme and theme_recession together:
+theme_tufte_recession <- theme_tufte() + theme_recession
+# Use the Tufte recession theme by adding it to the plot:
+plt_prop_unemployed_over_time + theme_tufte_recession
+
+# theme_set(): set your theme as the default using, e.g, set theme_tufte_recession as the default theme:
+theme_set(theme_tufte_recession)
+# Draw the plot (without explicitly adding a theme):
 plt_prop_unemployed_over_time
