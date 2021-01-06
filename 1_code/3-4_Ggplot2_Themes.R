@@ -203,3 +203,96 @@ plt_prop_unemployed_over_time + theme_tufte_recession
 theme_set(theme_tufte_recession)
 # Draw the plot (without explicitly adding a theme):
 plt_prop_unemployed_over_time
+# Set theme back to default in ggplot2:
+theme_set(theme_gray())
+
+# 4.5 Effective explanatory plots ####
+# Load the Gapminder dataset:
+library(gapminder)
+data(gapminder)
+# Prepare the date for comparing the life expectancy among the countries in 2007:
+gm2007_full <- gapminder %>%
+  filter(year == 2007) %>% 
+  select(country, lifeExp, continent)
+glimpse(gm2007_full)
+# Draw a histogram for the first exploratory plot:
+ggplot(gm2007_full, aes(lifeExp)) +
+  geom_histogram()
+# Alternative way is arranging the data according to life then plot that as an index, which allows us to see each point individually
+gm2007_full_arranged <- gm2007_full %>%
+  arrange(lifeExp) %>%
+  mutate(index = 1:nrow(gm2007_full_arranged))
+ggplot(gm2007_full_arranged, aes(index, lifeExp,
+                                 col = continent)) +
+  geom_point() # this has the advantage that we can color each point according to the continent.
+# After getting familiar with the data, reduce it to a compact and understandable format for a lay audience.
+gm2007_high <- gm2007_full %>%
+  arrange(lifeExp) %>%
+  top_n(10, wt = lifeExp)
+gm2007_low <- gm2007_full %>%
+  arrange(lifeExp) %>%
+  top_n(-10, wt = lifeExp)
+gm2007 <- rbind(gm2007_low, gm2007_high)
+glimpse(gm2007)
+# Create an info-viz style, similar to the graphs in a magazine or website for a mostly lay audience. E.g, construct the lollipop plot style:
+ggplot(gm2007, aes(lifeExp, country,
+                   col = lifeExp)) + 
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30,         # adds line segments 
+                   yend = country),
+               size = 2) +
+  geom_text(aes(label = lifeExp),     # add labels on the points.
+                color = "white",
+                size = 1.5)
+# Set a color scale for more magazin-quality effect:
+library(RColorBrewer)
+palette <- brewer.pal(5, "RdYlBu")[-(2:4)]
+# Modify the scales of the lollipop plot:
+plt_country_vs_lifeExp <- 
+  ggplot(gm2007, aes(lifeExp, country, 
+                   col = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, 
+                   yend = country), 
+               size = 2) +
+  geom_text(aes(label = round(lifeExp, 1)), 
+            color = "white", 
+            size = 1.5) +
+  scale_x_continuous("", 
+                     expand = c(0,0), 
+                     limits = c(30,90), 
+                     position = "top") +
+  scale_color_gradientn(colors = palette) +
+  labs(title = "Highest and lowest life expectancies, 2007", 
+       caption = "Source: gapminder")
+plt_country_vs_lifeExp
+# The following values have been calculated for embellishments to the plot:
+global_mean <- mean(gm2007_full$lifeExp)
+x_start <- global_mean + 4
+y_start <- 5.5
+x_end <- global_mean
+y_end <- 7.5
+# Define the theme of the plot:
+plt_country_vs_lifeExp <- plt_country_vs_lifeExp + 
+  theme_classic() +
+  theme(axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text = element_text(color = "black"),
+        axis.title = element_blank(),
+        legend.position = "none")
+plt_country_vs_lifeExp
+# Use geom_vline() to add a vertical line:
+plt_country_vs_lifeExp + 
+  geom_vline(xintercept = global_mean, 
+             color = "grey40", 
+             linetype = 3) +
+  # Use annotate() to add text and a curve to the plot:
+  annotate("text", x = x_start, y = y_start,
+           label = "The\nglobal\naverage",
+           vjust = 1, 
+           size = 3, 
+           color = "grey40") +
+  annotate("curve", x = x_start, y = y_start,
+          xend = x_end, yend = y_end,
+          arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+          color = "grey40")
