@@ -5,19 +5,19 @@
 library(tidyverse)
 
 # 4.1 Themes from scratch ####
-# The themes layer controls all the non-data ink on the plot, which are all the visual elements that are not actually part of the data. Visual elements can be classified as on of the three different types: text, line or rectangle. Each type can be modified by the corresponding function: element_text(), element_line() and element_rect(). 
+# The themes layer controls all the non-data ink on the plot, which are all the visual elements that are not actually part of the data. Visual elements can be classified as on of the three different types: text, line or rectangle. Each type can be modified by the respective function: element_text(), element_line() and element_rect(). 
 # Load and the built-in "iris" dataset in R:
 data("iris")
 # Make a starting plot:
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
   geom_jitter(alpha = 0.6)
-# Adjust theme elements with theme() function, e.g, changing the text color of the axes. Within the theme() function we can manipulate size, color, alignment and angle of the text.
+# Adjust theme elements with theme() function, e.g, changing the text color of the axes. 
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
   geom_jitter(alpha = 0.6) + 
-  theme(axis.title = element_text(color =  "blue"))
-# The line elements include tick marks on the axes, the axis lines and all grid lines. These are modified by element_line argument.
+  theme(axis.title = element_text(color = "blue"))
+# Line elements include tick marks on the axes, the axis lines themselves and all grid lines, both major and minor. These are modified by element_line argument.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
   geom_jitter(alpha = 0.6) + 
@@ -29,7 +29,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width,
   geom_jitter(alpha = 0.6) + 
   theme(plot.background = element_rect(color = "blue"),
         legend.box.background = element_rect(color = "blue"))
-# Although we have access to every item, we don't need to modify them individually. They inherent from each other inherently. E.g, all text elements inherit from text, so if text argument is changed, all text elements will be changed.
+# Although we have access to every item, we don't need to modify them individually. They inherent from each other in a hierarchy. All text elements inherit from text, so if text argument is changed, all downstream arguments would be affected.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
   geom_jitter(alpha = 0.6) +
@@ -75,7 +75,7 @@ plt_prop_unemployed_over_time +
   theme(axis.line = element_line(color = "red", 
                                  linetype = "dashed"),
         rect = element_rect(fill = "grey92")) # very pale gray
-# Remove the axis ticks and the panel gridlines by making them a blank element:
+# Remove the axis ticks and the panel grid lines by making them a blank element:
 plt_prop_unemployed_over_time +
   theme(axis.ticks = element_blank(), 
         panel.grid = element_blank())
@@ -108,8 +108,8 @@ plt_mpg_vs_wt_by_cyl +
         plot.margin = margin(10, 30, 50, 70, "mm"))
 
 # 4.2 Theme flexibility ####
-# If there are too many plots within a presentation, we'll want to have a consistency in the style. Once you settle with a specific theme, we can apply it to all plots of the same type. Creating a theme from scratch is a detailed process, we don't want to repeat it for every plot we make. 
-# Defining theme objects:
+# If there are too many plots within a presentation, we'll want to have a consistency in the style. Once you settle with a specific theme, we can apply it to all plots of the same type. Creating a theme from scratch is a detailed process, we don't want to repeat it for every plot. 
+# Draw a scatter plot and save it as an object:
 z <- ggplot(iris, aes(Sepal.Length, Sepal.Width,
                       col = Species)) +
   geom_jitter(alpha = 0.6) +
@@ -182,23 +182,22 @@ original <- theme_update(text = element_text(family = "serif",
 # Now all plots have the same theme.
 z
 # Save the theme for the economics dataset as theme_recession:
-theme_recession <- theme(
-  rect = element_rect(fill = "grey92"),
-  legend.key = element_rect(color = NA),
-  axis.ticks = element_blank(),
-  panel.grid = element_blank(),
-  panel.grid.major.y = element_line(color = "white", 
-                                    size = 0.5, 
-                                    linetype = "dotted"),
-  axis.text = element_text(color = "grey25"),
-  plot.title = element_text(face = "italic", size = 16),
-  legend.position = c(0.6, 0.1)
-)
+theme_recession <- theme(rect = element_rect(fill = "grey92"),
+                         legend.key = element_rect(color = NA),
+                         axis.ticks = element_blank(),
+                         panel.grid = element_blank(),
+                         panel.grid.major.y = element_line(
+                           color = "white", 
+                           size = 0.5, 
+                           linetype = "dotted"),
+                         axis.text = element_text(color = "grey25"),
+                         plot.title = element_text(face = "italic",
+                                                   size = 16),
+                         legend.position = c(0.6, 0.1))
 # Add the Tufte theme and theme_recession together:
 theme_tufte_recession <- theme_tufte() + theme_recession
 # Use the Tufte recession theme by adding it to the plot:
 plt_prop_unemployed_over_time + theme_tufte_recession
-
 # theme_set(): set your theme as the default using, e.g, set theme_tufte_recession as the default theme:
 theme_set(theme_tufte_recession)
 # Draw the plot (without explicitly adding a theme):
@@ -210,7 +209,7 @@ theme_set(theme_gray())
 # Load the Gapminder dataset:
 library(gapminder)
 data(gapminder)
-# Prepare the date for comparing the life expectancy among the countries in 2007:
+# Prepare the data for comparing the life expectancy among the countries in 2007:
 gm2007_full <- gapminder %>%
   filter(year == 2007) %>% 
   select(country, lifeExp, continent)
@@ -218,14 +217,14 @@ glimpse(gm2007_full)
 # Draw a histogram for the first exploratory plot:
 ggplot(gm2007_full, aes(lifeExp)) +
   geom_histogram()
-# Alternative way is arranging the data according to life then plot that as an index, which allows us to see each point individually
+# Alternative way is arranging the data according to life then plot that as an index, which allows us to see each point individually.
 gm2007_full_arranged <- gm2007_full %>%
   arrange(lifeExp) %>%
-  mutate(index = 1:nrow(gm2007_full_arranged))
+  mutate(index = 1:nrow(gm2007_full))
 ggplot(gm2007_full_arranged, aes(index, lifeExp,
                                  col = continent)) +
   geom_point() # this has the advantage that we can color each point according to the continent.
-# After getting familiar with the data, reduce it to a compact and understandable format for a lay audience.
+# After getting familiar with the data, reduce it to a compact and understandable format for a lay audience:
 gm2007_high <- gm2007_full %>%
   arrange(lifeExp) %>%
   top_n(10, wt = lifeExp)
