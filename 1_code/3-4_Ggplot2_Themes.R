@@ -27,8 +27,8 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width,
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
   geom_jitter(alpha = 0.6) + 
-  theme(plot.background = element_rect(color = "blue"),
-        legend.box.background = element_rect(color = "blue"))
+  theme(plot.background = element_rect(fill = "blue"),
+        legend.background = element_rect(fill = "blue"))
 # Although we have access to every item, we don't need to modify them individually. They inherent from each other in a hierarchy. All text elements inherit from text, so if text argument is changed, all downstream arguments would be affected.
 ggplot(iris, aes(Sepal.Length, Sepal.Width,
                  col = Species)) + 
