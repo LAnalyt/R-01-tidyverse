@@ -48,6 +48,8 @@ Exercises in Tidyverse packages from Datacamp and other courses
 
 4. TIDYR
 
-5. STRINGR
+5. READR
 
-6. PURRR
+6. STRINGR
+
+7. PURRR
