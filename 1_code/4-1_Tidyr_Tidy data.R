@@ -34,9 +34,36 @@ class(as_tibble(murders)$population)
 as_tibble(murders)$Population
 murders$Population # just returns NULL without warning, which can make it harder to debug.
 
+# tibble(): create a data frame in the tibble format.
+grades_tbl <- tibble(names = c("John", "Juan", "Jean", "Yao"),
+                     exam_1 = c(95, 80, 90, 85),
+                     exam_2 = c(90, 85, 85, 90))
+grades_tbl
+# data.frame(): function in base R which can be used to create a rectangular data frame. The difference is tibble shows the class of the columns in the result whereas data.frame does not.
+grades_df <- data.frame(names = c("John", "Juan", "Jean", "Yao"),
+                        exam_1 = c(95, 80, 90, 85),
+                        exam_2 = c(90, 85, 85, 90))
+grades_df
+# as_tibble(): convert a regular data frame to a tibble.
+as_tibble(grades_df)
 # While data frame columns need to be vectors of numbers, strings, or logical values, tibbles can have more complex objects, such as lists or functions. Also, we can create tibbles with functions:
 tibble(id = c(1, 2, 3),
        func = c(mean, median, sd))
+
+# 1.3 The pipe %>% operator ####
+# The advantage of using the pipe %>% in dplyr is that we do not have to keep naming new objects as we manipulate the data frame.
+tab_1 <- filter(murders, region == "South")
+tab_2 <- mutate(tab_1, rate = total / population * 10^5)
+rates <- tab_2$rate
+median(rates)
+# Avoid defining any new intermediate objects by instead typing:
+filter(murders, region == "South") %>%
+  mutate(rate = total / population * 10^5) %>%
+  summarize(median = median(rate)) %>%
+  pull(median)
+
+# 1.4 tidyr ####
+# Each of these functions takes a data frame as the first argument.
 # Create a data frame in a tibble format:
 character_df <- tibble(name = c("Skywalker", "R2-D2", "Obi-Wan"),
                        homeworld = c("Tatooine", "Naboo", "Stewjon"),
@@ -49,5 +76,3 @@ character_df %>%
   filter(homeworld == "Tatooine")
 character_df %>%
   mutate(is_human = species == "Human")
-
-# 1.3 tidyr ####
