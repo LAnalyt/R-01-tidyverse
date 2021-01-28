@@ -46,10 +46,16 @@ Exercises in Tidyverse packages from Datacamp and other courses
 
     3.8 Best practice
 
-4. TIDYR
+4. READR & READXL
 
-5. READR
+    4.1 Importing data
+    
+    4.2 Readxl
 
+5. TIDYR
+
+    5.1 Tidy data
+    
 6. STRINGR
 
 7. PURRR
