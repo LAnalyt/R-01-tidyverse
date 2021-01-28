@@ -1,6 +1,6 @@
 **1. INTRODUCTION TO TIDYVERSE**
 
-1.1 Data wrangling*
+  *1.1 Data wrangling*
 
   *1.2 Data visualization*
 
