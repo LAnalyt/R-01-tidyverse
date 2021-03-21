@@ -56,4 +56,17 @@
     
 **6. STRINGR**
 
-**7. PURRR**
+**7. CLEANING DATA**
+
+  *7.1 Common problems*
+  
+  *7.2 Categorical and Text data**
+  
+  *7.3 Advanced data problems*
+  
+  *7.4 Record Linkage*
+
+**8. PURRR**
+
+
+   
