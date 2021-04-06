@@ -53,18 +53,18 @@
 **5. TIDYR**
 
   *5.1 Tidy data*
-    
-**6. STRINGR**
+  
+**6. LUBRIDATE**
 
-**7. CLEANING DATA**
-
-  *7.1 Common problems*
+  *6.1 Date and time in R*
   
-  *7.2 Categorical and Text data**
+  *6.2 Parsing and manipulating Dates and Time**
   
-  *7.3 Advanced data problems*
+  *6.3 Arithmetic with Dates and Time
   
-  *7.4 Record Linkage*
+  *6.4 Problem in practice*
+  
+**7. STRINGR**
 
 **8. PURRR**
 
